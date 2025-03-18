@@ -15,7 +15,6 @@ const requiredParameters = [
   { key: 'queueSid', purpose: 'current queue sid' },
   { key: 'taskAttributes', purpose: 'task attributes to copy' },
   { key: 'workerSid', purpose: 'agent worker sid' },
-  { key: 'createUpdateSyncMapItem', purpose: 'create or update sync map item' },
 ];
 
 exports.handler = prepareFlexFunction(requiredParameters, async (context, event, callback, response, handleError) => {
@@ -34,7 +33,6 @@ exports.handler = prepareFlexFunction(requiredParameters, async (context, event,
       taskAttributes,
       workerSid,
     } = event;
-    const createUpdateSyncMapItem = event.createUpdateSyncMapItem === 'true' || false;
 
     // Create the webhook
     const webhookResult = await twilioExecute(context, (client) =>
@@ -58,40 +56,6 @@ exports.handler = prepareFlexFunction(requiredParameters, async (context, event,
       );
       if (!removeAgentResponse.success) throw removeAgentResponse.message;
 
-      let createMapItem = {};
-      if (createUpdateSyncMapItem) {
-        // Open a Sync Map by unique name and update its data
-        const syncMap = await twilioExecute(context, (client) =>
-          client.sync.v1
-            .services(context.TWILIO_FLEX_SYNC_SID)
-            .syncMaps.create({ uniqueName: `ParkedInteractions_${workerSid}` }),
-        );
-
-        // If map already exists, use the unique name to access it
-        if (syncMap.data?.sid || workerSid) {
-          const createMapItemResponse = await twilioExecute(context, (client) =>
-            client.sync.v1
-              .services(context.TWILIO_FLEX_SYNC_SID)
-              .syncMaps(syncMap.data?.sid || `ParkedInteractions_${workerSid}`)
-              .syncMapItems.create({
-                key: conversationSid,
-                ttl: channelType === 'sms' ? 0 : 86400, // SMS is the only channel known to reliably last over 24 hours
-                data: {
-                  interactionSid,
-                  flexInteractionChannelSid: channelSid,
-                  channelType,
-                  participantSid,
-                  workflowSid,
-                  taskChannelUniqueName,
-                  taskAttributes,
-                  webhookSid: webhook.sid,
-                },
-              }),
-          );
-          createMapItem = createMapItemResponse.data;
-        }
-      }
-
       // update conversation attributes
       const attributes = {
         interactionSid,
@@ -106,12 +70,6 @@ exports.handler = prepareFlexFunction(requiredParameters, async (context, event,
         taskAttributes,
         webhookSid: webhook.sid,
       };
-
-      if (createUpdateSyncMapItem && createMapItem.mapSid && createMapItem.key) {
-        attributes.mapSid = createMapItem.mapSid;
-        attributes.mapItemKey = createMapItem.key;
-      }
-
       const updateAttributesResponse = await twilioExecute(context, (client) =>
         client.conversations.v1.conversations(conversationSid).update({ attributes: JSON.stringify(attributes) }),
       );

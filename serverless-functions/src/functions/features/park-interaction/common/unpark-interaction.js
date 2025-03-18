@@ -8,8 +8,6 @@ exports.handler = prepareStudioFunction(requiredParameters, async (context, even
   try {
     const conversationSid = event.ConversationSid;
     const webhookSid = event.WebhookSid;
-    // RouteToSameWorker is only set when worker is unparking
-    const routeToSameWorker = event.RouteToSameWorker === 'true';
 
     // Remove webhook so it doesn't keep triggering if parked more than once
     const webhookResult = await twilioExecute(context, (client) =>
@@ -31,8 +29,6 @@ exports.handler = prepareStudioFunction(requiredParameters, async (context, even
       queueSid,
       workerSid,
       workflowSid,
-      mapSid,
-      mapItemKey,
     } = JSON.parse(conversation.data.attributes);
 
     // Create a new task through the invites endpoint. Alternatively you can pass

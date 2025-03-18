@@ -11,5 +11,5 @@ export const componentHook = function addScheduleManagerToSideNav(flex: typeof F
   }
 
   // Add side nav button for the view
-  flex.SideNav.Content.add(<ParkSideLink viewName="park-interaction" key="park-interaction-side-nav" />);
+//  flex.SideNav.Content.add(<ParkSideLink viewName="park-interaction" key="park-interaction-side-nav" />);
 };

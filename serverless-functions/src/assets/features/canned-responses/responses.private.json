@@ -1,6 +1,15 @@
 {
   "categories": [
     {
+      "section": "Greeting",
+      "responses": [
+        {
+          "label": "Hello",
+          "text": "Hello {{task.name}}"
+        }
+      ]
+    },
+    {
       "section": "Sales",
       "responses": [
         {

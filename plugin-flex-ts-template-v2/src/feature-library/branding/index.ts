@@ -4,6 +4,6 @@ import { isFeatureEnabled } from './config';
 import hooks from './flex-hooks/**/*.*';
 
 export const register = (): FeatureDefinition => {
-  if (!isFeatureEnabled()) return {};
+ 
   return { name: 'branding', hooks: typeof hooks === 'undefined' ? [] : hooks };
 };

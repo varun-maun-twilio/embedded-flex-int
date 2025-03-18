@@ -6,7 +6,5 @@ import { replaceStringAttributes } from '../../../../utils/helpers';
 
 export const componentName = FlexComponent.MainHeader;
 export const componentHook = function applyBrandingLogo(flex: typeof Flex) {
-  if (Boolean(getCustomLogoUrl())) {
-    flex.MainHeader.defaultProps.logoUrl = replaceStringAttributes(getCustomLogoUrl());
-  }
+  flex.MainHeader.defaultProps.logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png';
 };

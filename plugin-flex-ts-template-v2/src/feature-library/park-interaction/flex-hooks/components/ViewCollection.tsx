@@ -10,10 +10,12 @@ export const componentHook = function addParkInteractionView(flex: typeof Flex) 
     return;
   }
 
+  /*
   // Add view
   flex.ViewCollection.Content.add(
     <flex.View name="park-interaction" key="park-interaction-view">
       <ParkView key="park-interaction-view-content" />
     </flex.View>,
   );
+  */
 };

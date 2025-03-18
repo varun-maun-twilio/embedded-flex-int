@@ -15,7 +15,7 @@ interface TransferButtonProps {
 const ParkButton = (props: TransferButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const allowPark = !ConversationsHelper.allowLeave(props.task);
+  const allowPark = true; //!ConversationsHelper.allowLeave(props.task);
 
   const parkInteraction = async () => {
     setIsLoading(true);
